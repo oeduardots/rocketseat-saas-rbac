@@ -1,3 +1,5 @@
+https://github.com/login/oauth/authorize?client_id=Ov23liizYop3PCMzkDTd&redirect_uri=http://localhost:3000/api/auth/callback&scope=user:email
+
 # Next.js SaaS + RBAC
 
 This project contains all the necessary boilerplate to setup a multi-tenant SaaS with Next.js including authentication and RBAC authorization.
