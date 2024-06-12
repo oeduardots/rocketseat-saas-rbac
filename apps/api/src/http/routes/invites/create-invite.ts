@@ -4,11 +4,10 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
 import { auth } from '@/http/middlewares/auth'
+import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
+import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
-
-import { BadRequestError } from '../_errors/bad-request-error'
-import { UnauthorizedError } from '../_errors/unauthorized-error'
 
 export async function createInvite(app: FastifyInstance) {
   app
@@ -55,10 +54,10 @@ export async function createInvite(app: FastifyInstance) {
 
         if (
           organization.shouldAttachUsersByDomain &&
-          organization.domain === domain
+          domain !== organization.domain
         ) {
           throw new BadRequestError(
-            `Users with "${domain}" domain will join your organization automatically on login.`,
+            `Users with '${domain}' domain will join your organization automatically on login.`,
           )
         }
 
@@ -88,7 +87,7 @@ export async function createInvite(app: FastifyInstance) {
 
         if (memberWithSameEmail) {
           throw new BadRequestError(
-            'Another a member with this e-mail already belongs to your organization.',
+            'A member with this e-mail already belongs to your organization.',
           )
         }
 
