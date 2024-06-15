@@ -1,6 +1,7 @@
 'use server'
 
 import { HTTPError } from 'ky'
+import { cookies } from 'next/headers' // no next.js -> pode-se auterar cookies dentro das Server Actions, dentro das Route Handlers (pasta api), dentro do middlaware do next.js
 import { z } from 'zod'
 
 import { signInWithPassword } from '@/http/sign-in-with-password'
@@ -33,16 +34,15 @@ export async function signInWithEmailAndPassword(data: FormData) {
       password,
     })
 
-    console.log(token)
+    cookies().set('token', token, {
+      path: '/', // todos os endpoints
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    })
   } catch (err) {
     if (err instanceof HTTPError) {
       const { message } = await err.response.json()
 
-      return {
-        success: false,
-        message,
-        errors: null,
-      }
+      return { success: false, message, errors: null }
     }
 
     console.error(err)
@@ -54,9 +54,5 @@ export async function signInWithEmailAndPassword(data: FormData) {
     }
   }
 
-  return {
-    success: true,
-    message: null,
-    errors: null,
-  }
+  return { success: true, message: null, errors: null }
 }
