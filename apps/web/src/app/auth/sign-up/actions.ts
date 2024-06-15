@@ -7,7 +7,7 @@ import { signUp } from '@/http/sign-up'
 
 const signUpSchema = z
   .object({
-    name: z.string().refine((value) => value.split('').length > 1, {
+    name: z.string().refine((value) => value.split(' ').length > 1, {
       message: 'Please, enter your full name',
     }),
     email: z
